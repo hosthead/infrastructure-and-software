@@ -8,7 +8,7 @@ Tunnels are useful for connecting two endpoints, and for routing traffic between
 
 Yes, including how to firewall it properly.
 
-## Case
+# Case 1: Alice and Bob
 
 Alice wants to expose a service running on a single IP in her LAN 192.168.100.0/24 to a service on a single IP in Bob's LAN 192.168.200.0/24. Alice has a static public IP address of 203.0.113.201 and the ability to open ports to an internal address. Bob has a dynamic public IP address.
 
