@@ -14,6 +14,8 @@ Alice wants to expose a service running on a single IP in her LAN 192.168.100.0/
 
 Alice will act as the "server" so far as Bob will always be initiating the connection, however in wireguard either side can initiate a connection. Since Bob is behind a NAT though, he must initate the connection and send an occasional keepalive to keep the UDP port open.
 
+This case utilizes [RFC1918](https://datatracker.ietf.org/doc/html/rfc1918) addresses for the LANs of Alice and Bob. This case utilizes [RFC5737](https://datatracker.ietf.org/doc/html/rfc5737) addresses for the WANs of Alice and Bob.
+
 ## Environment
 
 * any Firewall
@@ -35,13 +37,13 @@ Alice's wireguard configuration is as follows.
 
     [Interface]
     PrivateKey= alice's private key
-    Address=192.0.2.1/30
+    Address=10.10.10.1/30
     ListenPort=7444
     
     [Peer]
     PublicKey= bob's public key
     PresharedKey= both end's shared key
-    AllowedIPs=192.0.2.2/32
+    AllowedIPs=10.10.10.2/32
 
 The Interface section:
 
@@ -59,7 +61,7 @@ Get this from Bob. This material is not secret, but ensure the public key receiv
 2. PresharedKey= both end's shared key  
 Generate this with `wg genpsk` and share with Bob through a secure means.
 3. AllowedIPs= The IP address and subnet to route to through this tunnel.  
-This does not restrict what IPs may come into the tunnel, only what traffic will leave this server through the tunnel. The latter will be addressed with firewalld. Set this to the IP address of Bob's end of the tunnel, 192.0.2.2/32
+This does not restrict what IPs may come into the tunnel, only what traffic will leave this server through the tunnel. The latter will be addressed with firewalld. Set this to the IP address of Bob's end of the tunnel, 10.10.10.2/32
 
 Alice saves this to /etc/wireguard/wg0.conf and enables it with `sudo systemctl enable --now wg-quick@wg0`.
 
@@ -70,10 +72,10 @@ Alice's firewalld configuration is built by the following.
     sudo firewall-cmd --permanent --zone=public --add-port=7444/udp
     sudo firewall-cmd --permanent --new-zone=bob
     sudo firewall-cmd --permanent --zone=bob --add-interface=wg0
-    sudo firewall-cmd --permanent --zone=bob --add-rich-rule='rule family="ipv4" source address="192.0.2.2/32" destination address="192.0.2.1/32" port port="5432" protocol="tcp" log level="info" accept'
+    sudo firewall-cmd --permanent --zone=bob --add-rich-rule='rule family="ipv4" source address="10.10.10.2/32" destination address="10.10.10.1/32" port port="5432" protocol="tcp" log level="info" accept'
     sudo firewall-cmd --reload
 
-This will permit bob to only access postgres on 192.0.2.1:5432 and nothing else.
+This will permit bob to only access postgres on 10.10.10.1:5432 and nothing else.
 
 ## Bob
 
@@ -85,12 +87,12 @@ Bob's wireguard configuration is as follows.
 
     [Interface]
     PrivateKey= bob's private key
-    Address=192.0.2.2/30
+    Address=10.10.10.2/30
     
     [Peer]
     PublicKey= alice's public key
     PresharedKey= both end's shared key
-    AllowedIPs=192.0.2.1/32
+    AllowedIPs=10.10.10.1/32
     Endpoint=203.0.113.201:7444
     PersistentKeepalive=5
 
@@ -110,7 +112,7 @@ Get this from Alice. This material is not secret, but ensure the public key rece
 2. PresharedKey= both end's shared key  
 Get this from Alice over a secure means.
 3. AllowedIPs= The IP address and subnet to route to through this tunnel.  
-This does not restrict what IPs may come into the tunnel, only what traffic will leave this server through the tunnel. The latter will be addressed with firewalld. Set this to the IP address of Alice's end of the tunnel, 192.0.2.1/32
+This does not restrict what IPs may come into the tunnel, only what traffic will leave this server through the tunnel. The latter will be addressed with firewalld. Set this to the IP address of Alice's end of the tunnel, 10.10.10.1/32
 4. Endpoint= The endpoint to connect out to, in this case Alice's end.
 5. PersistentKeepalive= Send a packet every x seconds if there is no other traffic.  
 This is necessary to keep the tunnel alive and keep Alice's endpoint updated if Bob's dynamic address changes.
