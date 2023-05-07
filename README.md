@@ -16,6 +16,24 @@ At this time the hardware choices here do not affect the deployments so long as 
 
 ## Software
 
+### Operating System
+
+For the Linux based deployments the latest Ubuntu LTS is used unless there is an issue with the latest release, in which case the last LTS is used or Debian is used. LTS releases of Ubuntu have 5 years of support and an extra 5 of extended security maintenance, but running the latest LTS release is generally a good idea.
+
+[Ubuntu Server LTS](https://ubuntu.com/download/server)
+
+### Automation
+
+Ansible is used for things such as patching the servers automatically.
+
+Ansible can be installed with
+
+    sudo apt install ansible
+
+As of writing, Ubuntu 22.04 LTS is shipping out Ansible 2.10, a fairly modern release.
+
+[Ansible documentation](https://docs.ansible.com/ansible/2.9/)
+
 ### Firewall
 
 Software firewalls provide a lot of flexibility. BSD* powered firewalls are common due to their use of pf. OPNsense is the recommended choice here for a software firewall. OPNsense is an alternative to pfsense, another popular choice, forked for security and modernization.
