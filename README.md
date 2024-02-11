@@ -16,6 +16,14 @@ At this time the hardware choices here do not affect the deployments so long as 
 
 ## Software
 
+### Virtualization
+
+Proxmox is a zero cost VM hypervisor built on top of mostly open source components. There are some proprietary bits, but the software is very friendly to the self hoster. You will get the occasional prompt to purchase support, which can be remedied with an edit to the javascript for the web interface on the proxmox install.
+
+[Proxmox Virtual Environment Home](https://www.proxmox.com/en/proxmox-virtual-environment/overview)
+
+See also [Virtualization/proxmox](virtualization/proxmox.md)
+
 ### Firewall
 
 Software firewalls provide a lot of flexibility. BSD* powered firewalls are common due to their use of pf. OPNsense is the recommended choice here for a software firewall. OPNsense is an alternative to pfsense, another popular choice, forked for security and modernization.
