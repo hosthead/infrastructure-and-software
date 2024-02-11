@@ -1,6 +1,8 @@
-# Virtualization
+# Proxmox
 
-One of the best things since sliced bread for the self hoster is virtualization. Take a single server and slice it up into multiple operating systems, managed by an out of band (from the perspective of the VMs) console.
+Foreword on virtualization:
+
+> One of the best things since sliced bread for the self hoster is virtualization. Take a single server and slice it up into multiple operating systems, managed by an out of band (from the perspective of the VMs) console.
 
 Also take advantage of network segmentation for security by virtualizing your network and firewall, for advanced users.
 
